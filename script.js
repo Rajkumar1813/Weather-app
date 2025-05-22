@@ -350,19 +350,33 @@ const updateHourlyData = (data) => {
     updateHourlyChart(hourly);
 };
 
-// Update air quality
+// Update air quality - FIXED VERSION
 const updateAirQuality = (data) => {
+    if (!data || !data.list || data.list.length === 0) {
+        console.error("Invalid air quality data:", data);
+        elements.airQualityIndex.textContent = "N/A";
+        elements.airQualityStatus.textContent = "Data unavailable";
+        elements.air_co.textContent = "N/A";
+        elements.air_no.textContent = "N/A";
+        elements.air_no2.textContent = "N/A";
+        elements.air_o3.textContent = "N/A";
+        elements.air_so2.textContent = "N/A";
+        elements.air_pm2_5.textContent = "N/A";
+        elements.air_pm10.textContent = "N/A";
+        return;
+    }
+
     const aqi = data.list[0].main.aqi;
     const components = data.list[0].components;
     
     elements.airQualityIndex.textContent = aqi;
-    elements.air_co.textContent = components.co.toFixed(2);
-    elements.air_no.textContent = components.no.toFixed(2);
-    elements.air_no2.textContent = components.no2.toFixed(2);
-    elements.air_o3.textContent = components.o3.toFixed(2);
-    elements.air_so2.textContent = components.so2.toFixed(2);
-    elements.air_pm2_5.textContent = components.pm2_5.toFixed(2);
-    elements.air_pm10.textContent = components.pm10.toFixed(2);
+    elements.air_co.textContent = components.co ? components.co.toFixed(2) : "N/A";
+    elements.air_no.textContent = components.no ? components.no.toFixed(2) : "N/A";
+    elements.air_no2.textContent = components.no2 ? components.no2.toFixed(2) : "N/A";
+    elements.air_o3.textContent = components.o3 ? components.o3.toFixed(2) : "N/A";
+    elements.air_so2.textContent = components.so2 ? components.so2.toFixed(2) : "N/A";
+    elements.air_pm2_5.textContent = components.pm2_5 ? components.pm2_5.toFixed(2) : "N/A";
+    elements.air_pm10.textContent = components.pm10 ? components.pm10.toFixed(2) : "N/A";
     
     // Set AQI color and status
     let aqiStatus = '';
@@ -394,8 +408,9 @@ const updateAirQuality = (data) => {
             aqiColor = '#9E9E9E';
     }
     
-    elements.airQualityIndex.style.backgroundColor = aqiColor;
+    elements.airQualityIndex.style.background = `conic-gradient(${aqiColor} 0% 100%)`;
     elements.airQualityStatus.textContent = aqiStatus;
+    elements.airQualityStatus.style.color = aqiColor;
 };
 
 // Update hourly chart
